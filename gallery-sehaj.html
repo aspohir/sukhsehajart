@@ -711,15 +711,23 @@
     <script>
         // Back button function
         function goBack() {
-            // Try to go back in browser history first
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                // Fallback to direct navigation
-                window.location.href = "index.html";
-            }
-        }
-
+    // Try using the referrer first
+    if (document.referrer && 
+        document.referrer !== window.location.href && 
+        document.referrer.includes(window.location.hostname)) {
+        window.location.href = document.referrer;
+        return;
+    }
+    
+    // Try browser history
+    if (window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+    
+    // Final fallback to homepage
+    window.location.href = "/";
+}
         // Pagination variables
         let currentPage = 1;
         const itemsPerPage = 12;
@@ -802,4 +810,5 @@
         document.addEventListener('DOMContentLoaded', initPagination);
     </script>
 </body>
+
 </html>
