@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sukhman & Sehaj's Art Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #fad0c4 75%, #a1c4fd 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape1 { width: 80px; height: 80px; background-color: #ff6b6b; top: 10%; left: 10%; animation-delay: 0s; }
+        .shape2 { width: 60px; height: 60px; background-color: #4ecdc4; top: 70%; left: 5%; animation-delay: 2s; }
+        .shape3 { width: 100px; height: 100px; background-color: #ffe66d; top: 20%; right: 10%; animation-delay: 4s; }
+        .shape4 { width: 70px; height: 70px; background-color: #a663cc; top: 60%; right: 15%; animation-delay: 1s; }
+        .shape5 { width: 90px; height: 90px; background-color: #ff9f1c; top: 40%; left: 80%; animation-delay: 3s; }
+
+        @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-20px) rotate(10deg);} }
+
+        header { text-align: center; padding: 2rem 0; position: relative; }
+        header h1 { font-family:'Fredoka One',cursive;font-size:3.5rem;color:#ff4757;text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(0,0,0,0.1);margin-bottom:0.5rem;animation:bounce 2s infinite alternate;}
+        @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-10px);}}
+        header p { font-size:1.5rem;color:#2f3542;font-weight:bold;margin-bottom:1rem; }
+
+        .paint-splash { position:absolute;width:100px;height:100px;border-radius:50% 60% 70% 40%/40% 50% 60% 50%;opacity:0.6;z-index:-1;}
+        .splash1 { top:-20px;left:10%;background-color:#ff6b6b;transform:rotate(15deg);animation:pulse 3s infinite alternate; }
+        .splash2 { bottom:-30px;right:15%;background-color:#4ecdc4;transform:rotate(-10deg);animation:pulse 3s infinite alternate 1s; }
+        @keyframes pulse { 0%,100%{transform:scale(1) rotate(15deg);}50%{transform:scale(1.1) rotate(20deg);} }
+
+        .container { max-width:1200px;margin:0 auto;padding:1rem; }
+        .intro { text-align:center;margin-bottom:3rem;background-color:rgba(255,255,255,0.7);border-radius:20px;padding:1.5rem;box-shadow:0 8px 15px rgba(0,0,0,0.1);border:3px dashed #ff6b6b; }
+        .intro h2 { font-family:'Fredoka One',cursive;font-size:2.5rem;color:#ff4757;margin-bottom:1rem; }
+        .intro p { font-size:1.3rem;color:#2f3542;font-weight:bold; }
+
+        .artists-container { display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-bottom:3rem; }
+        .artist-card { background-color:white;border-radius:20px;overflow:hidden;width:350px;box-shadow:0 10px 20px rgba(0,0,0,0.15);transition:all 0.3s ease;position:relative;border:5px solid transparent;background-clip:padding-box; }
+        .artist-card::before { content:'';position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;margin:-5px;border-radius:20px;background:linear-gradient(45deg,#ff6b6b,#4ecdc4,#ffe66d,#a663cc);background-size:300% 300%;animation:gradient 3s ease infinite; }
+        @keyframes gradient{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+        .artist-card:hover{transform:translateY(-15px) scale(1.03);box-shadow:0 15px 30px rgba(0,0,0,0.2);}
+        .artist-image-container{height:250px;overflow:hidden;position:relative;}
+        .artist-image{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
+        .artist-card:hover .artist-image{transform:scale(1.1);}
+        .artist-name-tag{position:absolute;top:15px;right:15px;background-color:#ff4757;color:white;font-family:'Fredoka One',cursive;padding:0.5rem 1rem;border-radius:30px;font-size:1.2rem;box-shadow:0 4px 8px rgba(0,0,0,0.2);transform:rotate(5deg);z-index:2;}
+        .artist-info{padding:1.5rem;text-align:center;}
+        .artist-info h3{font-family:'Fredoka One',cursive;font-size:2rem;margin-bottom:0.5rem;color:#2f3542;}
+        .artist-info p{font-size:1.2rem;color:#57606f;margin-bottom:1.5rem;}
+
+        .view-gallery-btn{display:inline-block;background:linear-gradient(45deg,#ff4757,#ff6b6b);color:white;font-family:'Fredoka One',cursive;font-size:1.2rem;padding:0.8rem 2rem;border-radius:50px;text-decoration:none;box-shadow:0 5px 10px rgba(255,71,87,0.3);transition:all 0.3s ease;position:relative;overflow:hidden;}
+        .view-gallery-btn:before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:rgba(255,255,255,0.2);transition:left 0.5s;}
+        .view-gallery-btn:hover:before{left:100%;}
+        .view-gallery-btn:hover{transform:translateY(-3px);box-shadow:0 8px 15px rgba(255,71,87,0.4);}
+        .view-gallery-btn i{margin-left:8px;}
+
+        footer{text-align:center;padding:2rem 0;margin-top:2rem;background-color:rgba(255,255,255,0.5);border-radius:20px 20px 0 0;}
+        footer p{font-size:1.2rem;color:#2f3542;font-weight:bold;margin-bottom:1rem;}
+        .social-icons{display:flex;justify-content:center;gap:1rem;}
+        .social-icons a{display:flex;align-items:center;justify-content:center;width:50px;height:50px;background-color:white;color:#ff4757;border-radius:50%;font-size:1.5rem;box-shadow:0 4px 8px rgba(0,0,0,0.1);transition:all 0.3s ease;}
+        .social-icons a:hover{transform:translateY(-5px);box-shadow:0 6px 12px rgba(0,0,0,0.15);color:white;}
+        .social-icons a:nth-child(1):hover{background-color:#3b5998;}
+        .social-icons a:nth-child(2):hover{background-color:#e1306c;}
+        .social-icons a:nth-child(3):hover{background-color:#1da1f2;}
+        .social-icons a:nth-child(4):hover{background-color:#e60023;}
+
+        .crayon{position:fixed;width:30px;height:150px;border-radius:5px;z-index:-1;animation:wobble 4s infinite ease-in-out;}
+        .crayon1{background-color:#ff4757;top:20%;left:2%;transform:rotate(30deg);animation-delay:0.5s;}
+        .crayon2{background-color:#4ecdc4;top:60%;right:3%;transform:rotate(-20deg);animation-delay:1.5s;}
+        @keyframes wobble{0%,100%{transform:rotate(30deg) translateY(0);}50%{transform:rotate(40deg) translateY(-10px);}}
+
+        @media(max-width:768px){
+            header h1{font-size:2.5rem;}
+            .intro h2{font-size:2rem;}
+            .artists-container{gap:2rem;}
+            .artist-card{width:100%;max-width:350px;}
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-animation">
+        <div class="floating-shape shape1"></div>
+        <div class="floating-shape shape2"></div>
+        <div class="floating-shape shape3"></div>
+        <div class="floating-shape shape4"></div>
+        <div class="floating-shape shape5"></div>
+    </div>
+
+    <!-- Decorative crayons -->
+    <div class="crayon crayon1"></div>
+    <div class="crayon crayon2"></div>
+
+    <header>
+        <div class="paint-splash splash1"></div>
+        <div class="paint-splash splash2"></div>
+        <h1>Sukhman & Sehaj's Art Gallery</h1>
+        <p>Amazing Pencil Sketches by Talented Young Artists!</p>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <h2>Meet Our Artists</h2>
+            <p>Click on an artist to view their amazing pencil sketches!</p>
+        </div>
+
+        <div class="artists-container">
+            <!-- Artist 1: Sukhman -->
+            <div class="artist-card" onclick="openGallery('sukhman')">
+                <div class="artist-image-container">
+                    <picture>
+                        <source srcset="images/artists/sukhman.webp" type="image/webp">
+                        <source srcset="images/artists/sukhman.jpg" type="image/jpeg">
+                        <img src="images/artists/sukhman.jpg" alt="Sukhman" class="artist-image" loading="lazy" width="350" height="250">
+                    </picture>
+                    <div class="artist-name-tag">Sukhman</div>
+                </div>
+                <div class="artist-info">
+                    <h3>Sukhman</h3>
+                    <p>Age: 14 | Creates amazing realistic sketches and portraits</p>
+                    <a href="#" class="view-gallery-btn">View Gallery <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Artist 2: Sehaj -->
+            <div class="artist-card" onclick="openGallery('sehaj')">
+                <div class="artist-image-container">
+                    <picture>
+                        <source srcset="images/artists/sehaj.webp" type="image/webp">
+                        <source srcset="images/artists/sehaj.jpg" type="image/jpeg">
+                        <img src="images/artists/sehaj.jpg" alt="Sehaj" class="artist-image" loading="lazy" width="350" height="250">
+                    </picture>
+                    <div class="artist-name-tag">Sehaj</div>
+                </div>
+                <div class="artist-info">
+                    <h3>Sehaj</h3>
+                    <p>Age: 10 | Loves drawing cartoons, animals, and fun characters</p>
+                    <a href="#" class="view-gallery-btn">View Gallery <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Sukhman & Sehaj's Art Gallery &copy; 2025</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openGallery(artistName) {
+            window.location.href = `gallery-${artistName}.html`;
+        }
+    </script>
+</body>
+</html>
