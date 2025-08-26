@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sehaj's Art Gallery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Keep your same CSS styles here (unchanged) */
+  </style>
+</head>
+<body>
+  <!-- Animated background elements -->
+  <div class="bg-animation">
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="floating-shape shape4"></div>
+    <div class="floating-shape shape5"></div>
+  </div>
+
+  <!-- Decorative crayons -->
+  <div class="crayon crayon1"></div>
+  <div class="crayon crayon2"></div>
+
+  <header>
+    <button class="back-btn" onclick="goBack()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <h1>Sehaj's Art Gallery</h1>
+  </header>
+
+  <div class="artist-banner">
+    <picture>
+      <source srcset="images/sehaj.webp" type="image/webp">
+      <source srcset="images/sehaj.jpg" type="image/jpeg">
+      <img src="images/sehaj.jpg" alt="Sehaj" class="artist-photo" loading="lazy" width="150" height="150">
+    </picture>
+    <div class="artist-info">
+      <h2>Sehaj</h2>
+      <p>Age: 10 | Loves drawing cartoons, animals, and fun characters</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="gallery-intro">
+      <h2>Pencil Sketches Gallery</h2>
+      <p>Explore Sehaj's collection of pencil sketches. Each piece is a permanent part of our gallery.</p>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- Sketch 1 -->
+      <div class="sketch-card">
+        <picture>
+          <source srcset="images/Sehaj-sketches/sketch1.webp" type="image/webp">
+          <source srcset="images/Sehaj-sketches/sketch1.jpg" type="image/jpeg">
+          <img src="images/Sehaj-sketches/sketch1.jpg" alt="Sketch 1" class="sketch-image" loading="lazy" width="400" height="250">
+        </picture>
+        <div class="sketch-info">
+          <h3>Best Friends</h3>
+          <p>A big eyed playful young one with its best friend.</p>
+          <div class="sketch-date">Created: October 10, 2024</div>
+        </div>
+      </div>
+
+      <!-- Sketch 2 -->
+      <div class="sketch-card">
+        <picture>
+          <source srcset="images/sketches/sehaj/sketch2.webp" type="image/webp">
+          <source srcset="images/sketches/sehaj/sketch2.png" type="image/png">
+          <img src="images/sketches/sehaj/sketch2.png" alt="Sketch 2" class="sketch-image" loading="lazy" width="400" height="250">
+        </picture>
+        <div class="sketch-info">
+          <h3>Loneliness</h3>
+          <p>In peaceful lonely moments.</p>
+          <div class="sketch-date">Created: June 06, 2023</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lightbox for full view -->
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-content" id="lightboxImage">
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Sukhman & Sehaj's Art Gallery &copy; 2025</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Back button
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    }
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const closeLightbox = document.querySelector('.close-lightbox');
+
+    document.querySelectorAll('.sketch-image').forEach(img => {
+      img.addEventListener('click', function() {
+        lightbox.style.display = 'block';
+        lightboxImage.src = this.src;
+      });
+    });
+
+    closeLightbox.addEventListener('click', () => { lightbox.style.display = 'none'; });
+    lightbox.addEventListener('click', event => {
+      if (event.target === lightbox) { lightbox.style.display = 'none'; }
+    });
+  </script>
+</body>
+</html>
