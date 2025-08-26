@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sukhman's Art Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 25%, #c2e9fb 75%, #a8e6cf 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape1 {
+            width: 80px;
+            height: 80px;
+            background-color: #4361ee;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 60px;
+            height: 60px;
+            background-color: #06ffa5;
+            top: 70%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+
+        .shape3 {
+            width: 100px;
+            height: 100px;
+            background-color: #ffbe0b;
+            top: 20%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        .shape4 {
+            width: 70px;
+            height: 70px;
+            background-color: #fb5607;
+            top: 60%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .shape5 {
+            width: 90px;
+            height: 90px;
+            background-color: #8338ec;
+            top: 40%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5rem;
+            color: #4361ee;
+            text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+            animation: bounce 2s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(67, 97, 238, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .artist-banner {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 0 auto 2rem;
+            max-width: 1200px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border: 3px dashed #4361ee;
+        }
+
+        .artist-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .artist-info h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: #4361ee;
+            margin-bottom: 0.5rem;
+        }
+
+        .artist-info p {
+            font-size: 1.3rem;
+            color: #2f3542;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 2rem;
+        }
+
+        .gallery-intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border: 3px dashed #4361ee;
+        }
+
+        .gallery-intro h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: #4361ee;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-intro p {
+            font-size: 1.3rem;
+            color: #2f3542;
+            font-weight: bold;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .sketch-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 5px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .sketch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            margin: -5px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #4361ee, #06ffa5, #ffbe0b, #fb5607);
+            background-size: 300% 300%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .sketch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sketch-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            cursor: pointer;
+        }
+
+        .sketch-card:hover .sketch-image {
+            transform: scale(1.05);
+        }
+
+        .sketch-info {
+            padding: 1.5rem;
+        }
+
+        .sketch-info h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #2f3542;
+            margin-bottom: 0.5rem;
+        }
+
+        .sketch-info p {
+            font-size: 1.1rem;
+            color: #57606f;
+            margin-bottom: 0.5rem;
+        }
+
+        .sketch-date {
+            font-size: 0.9rem;
+            color: #868e96;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90%;
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close-lightbox:hover {
+            color: #06ffa5;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: none;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 10px;
+        }
+
+        .page-btn {
+            background: linear-gradient(45deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+
+        .page-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.4);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(45deg, #06ffa5, #00b4d8);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-info {
+            display: flex;
+            align-items: center;
+            font-family: 'Fredoka One', cursive;
+            color: #4361ee;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 20px 20px 0 0;
+        }
+
+        footer p {
+            font-size: 1.2rem;
+            color: #2f3542;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            color: #4361ee;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
+
+        .social-icons a:nth-child(1):hover {
+            background-color: #3b5998;
+        }
+
+        .social-icons a:nth-child(2):hover {
+            background-color: #e1306c;
+        }
+
+        .social-icons a:nth-child(3):hover {
+            background-color: #1da1f2;
+        }
+
+        .social-icons a:nth-child(4):hover {
+            background-color: #e60023;
+        }
+
+        .crayon {
+            position: fixed;
+            width: 30px;
+            height: 150px;
+            border-radius: 5px;
+            z-index: -1;
+            animation: wobble 4s infinite ease-in-out;
+        }
+
+        .crayon1 {
+            background-color: #4361ee;
+            top: 20%;
+            left: 2%;
+            transform: rotate(30deg);
+            animation-delay: 0.5s;
+        }
+
+        .crayon2 {
+            background-color: #06ffa5;
+            top: 60%;
+            right: 3%;
+            transform: rotate(-20deg);
+            animation-delay: 1.5s;
+        }
+
+        @keyframes wobble {
+            0%, 100% {
+                transform: rotate(30deg) translateY(0);
+            }
+            50% {
+                transform: rotate(40deg) translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .artist-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .gallery-intro h2 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-animation">
+        <div class="floating-shape shape1"></div>
+        <div class="floating-shape shape2"></div>
+        <div class="floating-shape shape3"></div>
+        <div class="floating-shape shape4"></div>
+        <div class="floating-shape shape5"></div>
+    </div>
+
+    <!-- Decorative crayons -->
+    <div class="crayon crayon1"></div>
+    <div class="crayon crayon2"></div>
+
+    <header>
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <h1>Sukhman's Art Gallery</h1>
+    </header>
+
+    <div class="artist-banner">
+        <img src="images/sukham.jpg" alt="Sukhman" class="artist-photo">
+        <div class="artist-info">
+            <h2>Sukhman</h2>
+            <p>Age: 14 | Creates amazing realistic sketches and portraits</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="gallery-intro">
+            <h2>Pencil Sketches Gallery</h2>
+            <p>Explore Sukhman's collection of pencil sketches. Each piece is a permanent part of our gallery, showcasing the artist's journey and growth over time.</p>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Sketch 1 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch1.jpg" alt="Sketch 1" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Portrait Study</h3>
+                    <p>A detailed portrait focusing on shading and texture.</p>
+                    <div class="sketch-date">Created: June 15, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 2 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch2.jpg" alt="Sketch 2" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>City Landscape</h3>
+                    <p>Urban scene with buildings and perspective.</p>
+                    <div class="sketch-date">Created: July 22, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 3 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch3.jpg" alt="Sketch 3" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Still Life</h3>
+                    <p>Arrangement of everyday objects with attention to detail.</p>
+                    <div class="sketch-date">Created: August 5, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 4 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch4.jpg" alt="Sketch 4" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Animal Study</h3>
+                    <p>Detailed drawing of a wild animal in its natural habitat.</p>
+                    <div class="sketch-date">Created: August 30, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 5 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch5.jpg" alt="Sketch 5" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Abstract Composition</h3>
+                    <p>Exploration of shapes and forms in an abstract style.</p>
+                    <div class="sketch-date">Created: September 12, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 6 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch6.jpg" alt="Sketch 6" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Human Figure</h3>
+                    <p>Study of human anatomy and proportion.</p>
+                    <div class="sketch-date">Created: October 3, 2023</div>
+                </div>
+            </div>
+
+            <!-- Add more sketches as needed -->
+            <!-- Sketch 7 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch7.jpg" alt="Sketch 7" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Mountain Landscape</h3>
+                    <p>A serene mountain range with a lake in the foreground.</p>
+                    <div class="sketch-date">Created: October 15, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 8 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch8.jpg" alt="Sketch 8" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Floral Study</h3>
+                    <p>Detailed botanical drawing of various flowers.</p>
+                    <div class="sketch-date">Created: October 20, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 9 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch9.jpg" alt="Sketch 9" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Architectural Detail</h3>
+                    <p>Focus on intricate architectural elements and structures.</p>
+                    <div class="sketch-date">Created: November 1, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 10 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch10.jpg" alt="Sketch 10" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Seascape</h3>
+                    <p>Ocean waves and coastline with dynamic movement.</p>
+                    <div class="sketch-date">Created: November 5, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 11 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch11.jpg" alt="Sketch 11" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Forest Path</h3>
+                    <p>A winding path through a dense forest with dappled light.</p>
+                    <div class="sketch-date">Created: November 10, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 12 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch12.jpg" alt="Sketch 12" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Vintage Car</h3>
+                    <p>Detailed drawing of a classic automobile with chrome details.</p>
+                    <div class="sketch-date">Created: November 15, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 13 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch13.jpg" alt="Sketch 13" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Musical Instruments</h3>
+                    <p>Still life arrangement of various musical instruments.</p>
+                    <div class="sketch-date">Created: November 20, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 14 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch14.jpg" alt="Sketch 14" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Desert Landscape</h3>
+                    <p>Arid desert scene with sand dunes and rock formations.</p>
+                    <div class="sketch-date">Created: November 25, 2023</div>
+                </div>
+            </div>
+
+            <!-- Sketch 15 -->
+            <div class="sketch-card">
+                <img src="images/sketches/sukham/sketch15.jpg" alt="Sketch 15" class="sketch-image">
+                <div class="sketch-info">
+                    <h3>Winter Scene</h3>
+                    <p>Snow-covered landscape with bare trees and frozen lake.</p>
+                    <div class="sketch-date">Created: December 1, 2023</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination controls (hidden by default) -->
+        <div class="pagination" id="pagination">
+            <button class="page-btn" id="prevBtn" onclick="changePage(-1)">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <div class="page-info" id="pageInfo">Page 1 of 1</div>
+            <button class="page-btn" id="nextBtn" onclick="changePage(1)">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Lightbox for full view -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Sukhman & Sehaj's Art Gallery &copy; 2023</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Back button function
+        function goBack() {
+            // Try to go back in browser history first
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // Fallback to direct navigation
+                window.location.href = "index.html";
+            }
+        }
+
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 12;
+        const sketchCards = document.querySelectorAll('.sketch-card');
+        const totalPages = Math.ceil(sketchCards.length / itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        const pageInfo = document.getElementById('pageInfo');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Initialize pagination
+        function initPagination() {
+            // Show pagination only if there are more than 12 items
+            if (sketchCards.length > itemsPerPage) {
+                pagination.style.display = 'flex';
+                showPage(1);
+            }
+        }
+
+        // Show specific page
+        function showPage(page) {
+            currentPage = page;
+            
+            // Hide all sketch cards
+            sketchCards.forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // Calculate start and end indices
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, sketchCards.length);
+            
+            // Show sketch cards for current page
+            for (let i = startIndex; i < endIndex; i++) {
+                sketchCards[i].style.display = 'block';
+            }
+            
+            // Update page info
+            pageInfo.textContent = `Page ${page} of ${totalPages}`;
+            
+            // Update button states
+            prevBtn.disabled = (page === 1);
+            nextBtn.disabled = (page === totalPages);
+        }
+
+        // Change page
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if (newPage >= 1 && newPage <= totalPages) {
+                showPage(newPage);
+            }
+        }
+
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const closeLightbox = document.querySelector('.close-lightbox');
+
+        // Add click event to all sketch images
+        document.querySelectorAll('.sketch-image').forEach(img => {
+            img.addEventListener('click', function() {
+                lightbox.style.display = 'block';
+                lightboxImage.src = this.src;
+            });
+        });
+
+        // Close lightbox when clicking the close button
+        closeLightbox.addEventListener('click', function() {
+            lightbox.style.display = 'none';
+        });
+
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', function(event) {
+            if (event.target === lightbox) {
+                lightbox.style.display = 'none';
+            }
+        });
+
+        // Initialize pagination when page loads
+        document.addEventListener('DOMContentLoaded', initPagination);
+    </script>
+</body>
+</html>
