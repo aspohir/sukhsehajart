@@ -1,241 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sehaj's Art Gallery</title>
-
-  <!-- Icons & Fonts (optional) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkfQkbZV6D+M9I+4v4jM/zTnK4ZqB6Y2s7Q/2u2QvZQ5xqT6r9j8a7W7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --brand: #6366f1;
-      --ring: rgba(99, 102, 241, 0.25);
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: "Fredoka", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      color: var(--text);
-      background: var(--bg);
-    }
-    .no-scroll { overflow: hidden; }
+    /* Keep your same CSS styles here (unchanged) */
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: saturate(180%) blur(8px);
-      background: rgba(248, 250, 252, 0.8);
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    }
-    .back-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
-    h1 { margin: 0; font-size: 22px; }
-
-    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-
-    /* Artist banner */
-    .artist-banner {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      align-items: center;
-      gap: 16px;
-      background: var(--card);
-      padding: 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-    }
-    .artist-photo {
-      width: 120px; height: 120px; border-radius: 16px; object-fit: cover; display: block;
-    }
-    .artist-info h2 { margin: 0 0 6px; }
-    .artist-info p { margin: 0; color: var(--muted); }
-
-    .gallery-intro { margin: 24px 0 12px; }
-    .gallery-intro h2 { margin: 0 0 8px; }
-    .gallery-intro p { margin: 0; color: var(--muted); }
-
-    /* Gallery grid */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-    }
-    .sketch-card {
-      background: var(--card);
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .sketch-card:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(15,23,42,0.08); }
-
-    .sketch-image {
-      width: 100%; height: 220px; object-fit: cover; display: block; cursor: zoom-in;
-      background: #f1f5f9;
-    }
-    .sketch-info { padding: 12px 12px 14px; }
-    .sketch-info h3 { margin: 0 0 6px; font-size: 16px; }
-    .sketch-info p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
-    .sketch-date { font-size: 12px; color: #64748b; }
-
-    /* Lightbox */
-    #lightbox {
+    /* Lightbox styles */
+    .lightbox {
+      display: none;
       position: fixed;
-      inset: 0;
-      display: none; /* toggled by .open */
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.9);
-      padding: 24px;
       z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.9);
     }
-    #lightbox.open { display: flex; }
 
-    #lightboxImage {
-      max-width: 95vw;
-      max-height: 90vh;
-      border-radius: 12px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-      outline: 1px solid rgba(255,255,255,0.12);
-      animation: fadeIn .2s ease-out;
+    .lightbox-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 90%;
+      animation: fadeIn 0.3s;
     }
+
     .close-lightbox {
       position: absolute;
-      top: 14px;
-      right: 18px;
-      font-size: 34px;
+      top: 20px;
+      right: 35px;
       color: #fff;
+      font-size: 40px;
+      font-weight: bold;
       cursor: pointer;
-      line-height: 1;
-      user-select: none;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
-
-    footer { margin: 40px 0 24px; color: #64748b; }
-    .social-icons a { color: #334155; margin-right: 10px; text-decoration: none; }
-    .social-icons a:hover { color: var(--brand); }
-
-    @media (max-width: 560px) {
-      .artist-banner { grid-template-columns: 80px 1fr; }
-      .artist-photo { width: 80px; height: 80px; border-radius: 12px; }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
   </style>
 </head>
 <body>
+  <!-- Animated background elements -->
+  <div class="bg-animation">
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="floating-shape shape4"></div>
+    <div class="floating-shape shape5"></div>
+  </div>
+
+  <!-- Decorative crayons -->
+  <div class="crayon crayon1"></div>
+  <div class="crayon crayon2"></div>
+
   <header>
-    <div class="header-inner">
-      <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
-      <h1>Sehaj's Art Gallery</h1>
-    </div>
+    <button class="back-btn" onclick="goBack()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <h1>Sehaj's Art Gallery</h1>
   </header>
 
-  <main class="container">
-    <section class="artist-banner">
-      <picture>
-        <source srcset="images/sehaj.webp" type="image/webp">
-        <source srcset="images/sehaj.jpg" type="image/jpeg">
-        <img src="images/sehaj.jpg" alt="Portrait of artist Sehaj" class="artist-photo" width="150" height="150" loading="lazy">
-      </picture>
-      <div class="artist-info">
-        <h2>Sehaj</h2>
-        <p>Age: 10 · Loves drawing cartoons, animals, and fun characters</p>
-      </div>
-    </section>
+  <div class="artist-banner">
+    <picture>
+      <source srcset="images/sehaj.webp" type="image/webp">
+      <source srcset="images/sehaj.jpg" type="image/jpeg">
+      <img src="images/sehaj.jpg" alt="Sehaj" class="artist-photo" loading="lazy" width="150" height="150">
+    </picture>
+    <div class="artist-info">
+      <h2>Sehaj</h2>
+      <p>Age: 10 | Loves drawing cartoons, animals, and fun characters</p>
+    </div>
+  </div>
 
-    <section class="gallery-intro">
+  <div class="container">
+    <div class="gallery-intro">
       <h2>Pencil Sketches Gallery</h2>
-      <p>Tap any sketch to view it in full size.</p>
-    </section>
+      <p>Explore Sehaj's collection of pencil sketches. Each piece is a permanent part of our gallery.</p>
+    </div>
 
-    <section class="gallery-grid" id="galleryGrid">
+    <div class="gallery-grid" id="galleryGrid">
+
       <!-- Sketch 1 -->
-      <article class="sketch-card">
+      <div class="sketch-card">
         <picture>
           <source srcset="images/Sehaj-sketches/sketch1.webp" type="image/webp">
           <source srcset="images/Sehaj-sketches/sketch1.jpg" type="image/jpeg">
-          <img
-            src="images/Sehaj-sketches/sketch1.jpg"
-            alt="Best Friends pencil sketch"
-            class="sketch-image"
-            width="400" height="250"
-            loading="lazy">
+          <img src="images/Sehaj-sketches/sketch1.jpg" alt="Sketch 1" class="sketch-image" loading="lazy" width="400" height="250">
         </picture>
         <div class="sketch-info">
           <h3>Best Friends</h3>
-          <p>A big-eyed playful young one with its best friend.</p>
+          <p>A big eyed playful young one with its best friend.</p>
           <div class="sketch-date">Created: October 10, 2024</div>
         </div>
-      </article>
+      </div>
 
       <!-- Sketch 2 -->
-      <article class="sketch-card">
+      <div class="sketch-card">
         <picture>
           <source srcset="images/sketches/sehaj/sketch2.webp" type="image/webp">
           <source srcset="images/sketches/sehaj/sketch2.png" type="image/png">
-          <img
-            src="images/sketches/sehaj/sketch2.png"
-            alt="Loneliness pencil sketch"
-            class="sketch-image"
-            width="400" height="250"
-            loading="lazy">
+          <img src="images/sketches/sehaj/sketch2.png" alt="Sketch 2" class="sketch-image" loading="lazy" width="400" height="250">
         </picture>
         <div class="sketch-info">
           <h3>Loneliness</h3>
           <p>In peaceful lonely moments.</p>
           <div class="sketch-date">Created: June 06, 2023</div>
         </div>
-      </article>
+      </div>
 
-      <!-- Duplicate the article block above for more sketches; keep the class 'sketch-image' on the <img> -->
-    </section>
-  </main>
-
-  <!-- Lightbox -->
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
-    <span class="close-lightbox" id="lightboxClose" aria-label="Close">&times;</span>
-    <img id="lightboxImage" alt="Expanded sketch">
+    </div>
   </div>
 
-  <footer class="container">
-    <p>Sukhman &amp; Sehaj's Art Gallery &copy; 2025</p>
-    <div class="social-icons">
-      <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-      <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+  <!-- Lightbox for full view -->
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-content" id="lightboxImage">
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Sukhman & Sehaj's Art Gallery &copy; 2025</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
     </div>
   </footer>
 
@@ -249,43 +146,21 @@
       }
     }
 
-    // --- Lightbox logic (robust & simple) ---
+    // Lightbox
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightboxImage');
-    const lightboxClose = document.getElementById('lightboxClose');
-    const gallery = document.getElementById('galleryGrid');
+    const closeLightbox = document.querySelector('.close-lightbox');
 
-    function openLightbox(src) {
-      if (!src) return;
-      lightboxImage.src = src;
-      lightbox.classList.add('open');
-      document.body.classList.add('no-scroll');
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      document.body.classList.remove('no-scroll');
-      // prevent flash of old image next open
-      lightboxImage.src = '';
-    }
-
-    // Event delegation handles all images (present/future)
-    gallery.addEventListener('click', function (e) {
-      const img = e.target.closest('.sketch-image');
-      if (!img) return;
-      // Prefer data-full, else use currentSrc (correct src from <picture>), else src
-      const full = img.dataset.full || img.currentSrc || img.src;
-      openLightbox(full);
+    document.querySelectorAll('.sketch-image').forEach(img => {
+      img.addEventListener('click', function() {
+        lightbox.style.display = 'block';
+        lightboxImage.src = this.src;
+      });
     });
 
-    // Close interactions
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', function (e) {
-      // Click outside the image closes
-      if (e.target === lightbox) closeLightbox();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    closeLightbox.addEventListener('click', () => { lightbox.style.display = 'none'; });
+    lightbox.addEventListener('click', event => {
+      if (event.target === lightbox) { lightbox.style.display = 'none'; }
     });
   </script>
 </body>
