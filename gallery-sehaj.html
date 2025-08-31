@@ -1,805 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sehaj's Art Gallery</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Comic Neue', cursive;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sehaj's Art Gallery</title>
 
-        body {
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 25%, #dcedc1 75%, #ffd3b6 100%);
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-        }
+  <!-- Icons & Fonts (optional) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkfQkbZV6D+M9I+4v4jM/zTnK4ZqB6Y2s7Q/2u2QvZQ5xqT6r9j8a7W7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 
-        /* Animated background elements */
-        .bg-animation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
-        }
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --brand: #6366f1;
+      --ring: rgba(99, 102, 241, 0.25);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Fredoka", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+    }
+    .no-scroll { overflow: hidden; }
 
-        .floating-shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: float 15s infinite ease-in-out;
-        }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: saturate(180%) blur(8px);
+      background: rgba(248, 250, 252, 0.8);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .back-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    h1 { margin: 0; font-size: 22px; }
 
-        .shape1 {
-            width: 80px;
-            height: 80px;
-            background-color: #06ffa5;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
+    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
-        .shape2 {
-            width: 60px;
-            height: 60px;
-            background-color: #4361ee;
-            top: 70%;
-            left: 5%;
-            animation-delay: 2s;
-        }
+    /* Artist banner */
+    .artist-banner {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+    .artist-photo {
+      width: 120px; height: 120px; border-radius: 16px; object-fit: cover; display: block;
+    }
+    .artist-info h2 { margin: 0 0 6px; }
+    .artist-info p { margin: 0; color: var(--muted); }
 
-        .shape3 {
-            width: 100px;
-            height: 100px;
-            background-color: #ffbe0b;
-            top: 20%;
-            right: 10%;
-            animation-delay: 4s;
-        }
+    .gallery-intro { margin: 24px 0 12px; }
+    .gallery-intro h2 { margin: 0 0 8px; }
+    .gallery-intro p { margin: 0; color: var(--muted); }
 
-        .shape4 {
-            width: 70px;
-            height: 70px;
-            background-color: #fb5607;
-            top: 60%;
-            right: 15%;
-            animation-delay: 1s;
-        }
+    /* Gallery grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .sketch-card {
+      background: var(--card);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .sketch-card:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(15,23,42,0.08); }
 
-        .shape5 {
-            width: 90px;
-            height: 90px;
-            background-color: #8338ec;
-            top: 40%;
-            left: 80%;
-            animation-delay: 3s;
-        }
+    .sketch-image {
+      width: 100%; height: 220px; object-fit: cover; display: block; cursor: zoom-in;
+      background: #f1f5f9;
+    }
+    .sketch-info { padding: 12px 12px 14px; }
+    .sketch-info h3 { margin: 0 0 6px; font-size: 16px; }
+    .sketch-info p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+    .sketch-date { font-size: 12px; color: #64748b; }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(10deg);
-            }
-        }
+    /* Lightbox */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      display: none; /* toggled by .open */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.9);
+      padding: 24px;
+      z-index: 1000;
+    }
+    #lightbox.open { display: flex; }
 
-        header {
-            text-align: center;
-            padding: 2rem 0;
-            position: relative;
-        }
+    #lightboxImage {
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      outline: 1px solid rgba(255,255,255,0.12);
+      animation: fadeIn .2s ease-out;
+    }
+    .close-lightbox {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 34px;
+      color: #fff;
+      cursor: pointer;
+      line-height: 1;
+      user-select: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
 
-        header h1 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5rem;
-            color: #06ffa5;
-            text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(0,0,0,0.1);
-            margin-bottom: 0.5rem;
-            animation: bounce 2s infinite alternate;
-        }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
 
-        @keyframes bounce {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-10px);
-            }
-        }
+    footer { margin: 40px 0 24px; color: #64748b; }
+    .social-icons a { color: #334155; margin-right: 10px; text-decoration: none; }
+    .social-icons a:hover { color: var(--brand); }
 
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(45deg, #06ffa5, #00b4d8);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 5px 10px rgba(6, 255, 165, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(6, 255, 165, 0.4);
-        }
-
-        .artist-banner {
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 20px;
-            padding: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin: 0 auto 2rem;
-            max-width: 1200px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            border: 3px dashed #06ffa5;
-        }
-
-        .artist-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .artist-info h2 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 2.5rem;
-            color: #06ffa5;
-            margin-bottom: 0.5rem;
-        }
-
-        .artist-info p {
-            font-size: 1.3rem;
-            color: #2f3542;
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem 2rem;
-        }
-
-        .gallery-intro {
-            text-align: center;
-            margin-bottom: 2rem;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            border: 3px dashed #06ffa5;
-        }
-
-        .gallery-intro h2 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 2.5rem;
-            color: #06ffa5;
-            margin-bottom: 1rem;
-        }
-
-        .gallery-intro p {
-            font-size: 1.3rem;
-            color: #2f3542;
-            font-weight: bold;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .sketch-card {
-            background-color: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            position: relative;
-            border: 5px solid transparent;
-            background-clip: padding-box;
-        }
-
-        .sketch-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            margin: -5px;
-            border-radius: 20px;
-            background: linear-gradient(45deg, #06ffa5, #4361ee, #ffbe0b, #fb5607);
-            background-size: 300% 300%;
-            animation: gradient 3s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .sketch-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .sketch-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-            cursor: pointer;
-        }
-
-        .sketch-card:hover .sketch-image {
-            transform: scale(1.05);
-        }
-
-        .sketch-info {
-            padding: 1.5rem;
-        }
-
-        .sketch-info h3 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
-            color: #2f3542;
-            margin-bottom: 0.5rem;
-        }
-
-        .sketch-info p {
-            font-size: 1.1rem;
-            color: #57606f;
-            margin-bottom: 0.5rem;
-        }
-
-        .sketch-date {
-            font-size: 0.9rem;
-            color: #868e96;
-        }
-
-        /* Lightbox styles */
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            animation: fadeIn 0.3s;
-        }
-
-        .lightbox-content {
-            margin: auto;
-            display: block;
-            width: 90%;
-            max-width: 1200px;
-            max-height: 90%;
-            object-fit: contain;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
-        }
-
-        .close-lightbox {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .close-lightbox:hover {
-            color: #06ffa5;
-        }
-
-        @keyframes fadeIn {
-            from {opacity: 0}
-            to {opacity: 1}
-        }
-
-        /* Pagination styles */
-        .pagination {
-            display: none;
-            justify-content: center;
-            margin: 2rem 0;
-            gap: 10px;
-        }
-
-        .page-btn {
-            background: linear-gradient(45deg, #06ffa5, #00b4d8);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.2rem;
-            border-radius: 50px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(6, 255, 165, 0.3);
-        }
-
-        .page-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(6, 255, 165, 0.4);
-        }
-
-        .page-btn.active {
-            background: linear-gradient(45deg, #4361ee, #3a0ca3);
-        }
-
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .page-info {
-            display: flex;
-            align-items: center;
-            font-family: 'Fredoka One', cursive;
-            color: #06ffa5;
-            font-size: 1.1rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 2rem;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 20px 20px 0 0;
-        }
-
-        footer p {
-            font-size: 1.2rem;
-            color: #2f3542;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            color: #06ffa5;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            color: white;
-        }
-
-        .social-icons a:nth-child(1):hover {
-            background-color: #3b5998;
-        }
-
-        .social-icons a:nth-child(2):hover {
-            background-color: #e1306c;
-        }
-
-        .social-icons a:nth-child(3):hover {
-            background-color: #1da1f2;
-        }
-
-        .social-icons a:nth-child(4):hover {
-            background-color: #e60023;
-        }
-
-        .crayon {
-            position: fixed;
-            width: 30px;
-            height: 150px;
-            border-radius: 5px;
-            z-index: -1;
-            animation: wobble 4s infinite ease-in-out;
-        }
-
-        .crayon1 {
-            background-color: #06ffa5;
-            top: 20%;
-            left: 2%;
-            transform: rotate(30deg);
-            animation-delay: 0.5s;
-        }
-
-        .crayon2 {
-            background-color: #4361ee;
-            top: 60%;
-            right: 3%;
-            transform: rotate(-20deg);
-            animation-delay: 1.5s;
-        }
-
-        @keyframes wobble {
-            0%, 100% {
-                transform: rotate(30deg) translateY(0);
-            }
-            50% {
-                transform: rotate(40deg) translateY(-10px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.5rem;
-            }
-
-            .artist-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .gallery-intro h2 {
-                font-size: 2rem;
-            }
-
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
-            }
-        }
-    </style>
+    @media (max-width: 560px) {
+      .artist-banner { grid-template-columns: 80px 1fr; }
+      .artist-photo { width: 80px; height: 80px; border-radius: 12px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Animated background elements -->
-    <div class="bg-animation">
-        <div class="floating-shape shape1"></div>
-        <div class="floating-shape shape2"></div>
-        <div class="floating-shape shape3"></div>
-        <div class="floating-shape shape4"></div>
-        <div class="floating-shape shape5"></div>
+  <header>
+    <div class="header-inner">
+      <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
+      <h1>Sehaj's Art Gallery</h1>
     </div>
+  </header>
 
-    <!-- Decorative crayons -->
-    <div class="crayon crayon1"></div>
-    <div class="crayon crayon2"></div>
+  <main class="container">
+    <section class="artist-banner">
+      <picture>
+        <source srcset="images/sehaj.webp" type="image/webp">
+        <source srcset="images/sehaj.jpg" type="image/jpeg">
+        <img src="images/sehaj.jpg" alt="Portrait of artist Sehaj" class="artist-photo" width="150" height="150" loading="lazy">
+      </picture>
+      <div class="artist-info">
+        <h2>Sehaj</h2>
+        <p>Age: 10 · Loves drawing cartoons, animals, and fun characters</p>
+      </div>
+    </section>
 
-    <header>
-        <button class="back-btn" onclick="goBack()">
-            <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <h1>Sehaj's Art Gallery</h1>
-    </header>
+    <section class="gallery-intro">
+      <h2>Pencil Sketches Gallery</h2>
+      <p>Tap any sketch to view it in full size.</p>
+    </section>
 
-    <div class="artist-banner">
-        <img src="images/sehaj.jpg" alt="Sehaj" class="artist-photo">
-        <div class="artist-info">
-            <h2>Sehaj</h2>
-            <p>Age: 10 | Loves drawing cartoons, animals, and fun characters</p>
+    <section class="gallery-grid" id="galleryGrid">
+      <!-- Sketch 1 -->
+      <article class="sketch-card">
+        <picture>
+          <source srcset="images/Sehaj-sketches/sketch1.webp" type="image/webp">
+          <source srcset="images/Sehaj-sketches/sketch1.jpg" type="image/jpeg">
+          <img
+            src="images/Sehaj-sketches/sketch1.jpg"
+            alt="Best Friends pencil sketch"
+            class="sketch-image"
+            width="400" height="250"
+            loading="lazy">
+        </picture>
+        <div class="sketch-info">
+          <h3>Best Friends</h3>
+          <p>A big-eyed playful young one with its best friend.</p>
+          <div class="sketch-date">Created: October 10, 2024</div>
         </div>
+      </article>
+
+      <!-- Sketch 2 -->
+      <article class="sketch-card">
+        <picture>
+          <source srcset="images/sketches/sehaj/sketch2.webp" type="image/webp">
+          <source srcset="images/sketches/sehaj/sketch2.png" type="image/png">
+          <img
+            src="images/sketches/sehaj/sketch2.png"
+            alt="Loneliness pencil sketch"
+            class="sketch-image"
+            width="400" height="250"
+            loading="lazy">
+        </picture>
+        <div class="sketch-info">
+          <h3>Loneliness</h3>
+          <p>In peaceful lonely moments.</p>
+          <div class="sketch-date">Created: June 06, 2023</div>
+        </div>
+      </article>
+
+      <!-- Duplicate the article block above for more sketches; keep the class 'sketch-image' on the <img> -->
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <span class="close-lightbox" id="lightboxClose" aria-label="Close">&times;</span>
+    <img id="lightboxImage" alt="Expanded sketch">
+  </div>
+
+  <footer class="container">
+    <p>Sukhman &amp; Sehaj's Art Gallery &copy; 2025</p>
+    <div class="social-icons">
+      <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+      <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
     </div>
+  </footer>
 
-    <div class="container">
-        <div class="gallery-intro">
-            <h2>Pencil Sketches Gallery</h2>
-            <p>Explore Sehaj's collection of pencil sketches. Each piece is a permanent part of our gallery, showcasing the artist's journey and growth over time.</p>
-        </div>
+  <script>
+    // Back button
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    }
 
-        <div class="gallery-grid" id="galleryGrid">
-            <!-- Sketch 1 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch1.jpg" alt="Sketch 1" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Best Friends</h3>
-                    <p>A big eyed playful young one with its best friend.</p>
-                    <div class="sketch-date">Created: October 10, 2024</div>
-                </div>
-            </div>
+    // --- Lightbox logic (robust & simple) ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const gallery = document.getElementById('galleryGrid');
 
-            <!-- Sketch 2 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch2.png" alt="Sketch 2" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Loneliness</h3>
-                    <p>In peaceful lonely moments.</p>
-                    <div class="sketch-date">Created: June 06, 2023</div>
-                </div>
-            </div>
+    function openLightbox(src) {
+      if (!src) return;
+      lightboxImage.src = src;
+      lightbox.classList.add('open');
+      document.body.classList.add('no-scroll');
+    }
 
-            <!-- Sketch 3 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch3.png" alt="Sketch 3" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Elegance</h3>
-                    <p>Elegance on its peak.</p>
-                    <div class="sketch-date">Created: October 11, 2023</div>
-                </div>
-            </div>
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.classList.remove('no-scroll');
+      // prevent flash of old image next open
+      lightboxImage.src = '';
+    }
 
-            <!-- Sketch 4 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch4.jpg" alt="Sketch 4" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Young Girl</h3>
-                    <p>Logo of style.</p>
-                    <div class="sketch-date">Created: April 13, 2024</div>
-                </div>
-            </div>
+    // Event delegation handles all images (present/future)
+    gallery.addEventListener('click', function (e) {
+      const img = e.target.closest('.sketch-image');
+      if (!img) return;
+      // Prefer data-full, else use currentSrc (correct src from <picture>), else src
+      const full = img.dataset.full || img.currentSrc || img.src;
+      openLightbox(full);
+    });
 
-            <!-- Sketch 5 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch5.png" alt="Sketch 5" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Selfie Time</h3>
-                    <p>Lets have a selfie....</p>
-                    <div class="sketch-date">Created: April 16, 2024</div>
-                </div>
-            </div>
-
-            <!-- Sketch 6 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch6.jpg" alt="Sketch 6" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Heart in Paws</h3>
-                    <p>A little hello, wrapped in love and whiskers.</p>
-                    <div class="sketch-date">Created: October 3, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 7 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch7.jpg" alt="Sketch 7" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Playful Tone</h3>
-                    <p>The Secret Smile.</p>
-                    <div class="sketch-date">Created: October 15, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 8 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch8.jpg" alt="Sketch 8" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Smiles in Bloom</h3>
-                    <p>Eyes closed, but spirit open.</p>
-                    <div class="sketch-date">Created: October 20, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 9 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch9.jpg" alt="Sketch 9" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Bunny Hugs</h3>
-                    <p>Together is the Best Place to Be.</p>
-                    <div class="sketch-date">Created: November 1, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 10 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch10.jpg" alt="Sketch 10" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Bear With Me</h3>
-                    <p>Turning away, but to reflect.</p>
-                    <div class="sketch-date">Created: November 5, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 11 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch11.jpg" alt="Sketch 11" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Robot Friends</h3>
-                    <p>Friendly robots with gears and antennas.</p>
-                    <div class="sketch-date">Created: November 10, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 12 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch12.jpg" alt="Sketch 12" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Pirate Ship</h3>
-                    <p>A pirate ship sailing on the high seas.</p>
-                    <div class="sketch-date">Created: November 15, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 13 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch13.jpg" alt="Sketch 13" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Fairy Garden</h3>
-                    <p>Tiny fairies living among flowers and mushrooms.</p>
-                    <div class="sketch-date">Created: November 20, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 14 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch14.jpg" alt="Sketch 14" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Racing Cars</h3>
-                    <p>Fast cars racing on a colorful track.</p>
-                    <div class="sketch-date">Created: November 25, 2023</div>
-                </div>
-            </div>
-
-            <!-- Sketch 15 -->
-            <div class="sketch-card">
-                <img src="images/sketches/sehaj/sketch15.jpg" alt="Sketch 15" class="sketch-image">
-                <div class="sketch-info">
-                    <h3>Winter Wonderland</h3>
-                    <p>Snowmen, ice skating, and winter fun.</p>
-                    <div class="sketch-date">Created: December 1, 2023</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pagination controls (hidden by default) -->
-        <div class="pagination" id="pagination">
-            <button class="page-btn" id="prevBtn" onclick="changePage(-1)">
-                <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <div class="page-info" id="pageInfo">Page 1 of 1</div>
-            <button class="page-btn" id="nextBtn" onclick="changePage(1)">
-                Next <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Lightbox for full view -->
-    <div id="lightbox" class="lightbox">
-        <span class="close-lightbox">&times;</span>
-        <img class="lightbox-content" id="lightboxImage">
-    </div>
-
-    <footer>
-        <div class="container">
-            <p>Sukhman & Sehaj's Art Gallery &copy; 2023</p>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-pinterest"></i></a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Back button function
-        function goBack() {
-            // Try to go back in browser history first
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                // Fallback to direct navigation
-                window.location.href = "index.html";
-            }
-        }
-
-        // Pagination variables
-        let currentPage = 1;
-        const itemsPerPage = 12;
-        const sketchCards = document.querySelectorAll('.sketch-card');
-        const totalPages = Math.ceil(sketchCards.length / itemsPerPage);
-        const pagination = document.getElementById('pagination');
-        const pageInfo = document.getElementById('pageInfo');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        // Initialize pagination
-        function initPagination() {
-            // Show pagination only if there are more than 12 items
-            if (sketchCards.length > itemsPerPage) {
-                pagination.style.display = 'flex';
-                showPage(1);
-            }
-        }
-
-        // Show specific page
-        function showPage(page) {
-            currentPage = page;
-            
-            // Hide all sketch cards
-            sketchCards.forEach(card => {
-                card.style.display = 'none';
-            });
-            
-            // Calculate start and end indices
-            const startIndex = (page - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, sketchCards.length);
-            
-            // Show sketch cards for current page
-            for (let i = startIndex; i < endIndex; i++) {
-                sketchCards[i].style.display = 'block';
-            }
-            
-            // Update page info
-            pageInfo.textContent = `Page ${page} of ${totalPages}`;
-            
-            // Update button states
-            prevBtn.disabled = (page === 1);
-            nextBtn.disabled = (page === totalPages);
-        }
-
-        // Change page
-        function changePage(direction) {
-            const newPage = currentPage + direction;
-            if (newPage >= 1 && newPage <= totalPages) {
-                showPage(newPage);
-            }
-        }
-
-        // Lightbox functionality
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImage = document.getElementById('lightboxImage');
-        const closeLightbox = document.querySelector('.close-lightbox');
-
-        // Add click event to all sketch images
-        document.querySelectorAll('.sketch-image').forEach(img => {
-            img.addEventListener('click', function() {
-                lightbox.style.display = 'block';
-                lightboxImage.src = this.src;
-            });
-        });
-
-        // Close lightbox when clicking the close button
-        closeLightbox.addEventListener('click', function() {
-            lightbox.style.display = 'none';
-        });
-
-        // Close lightbox when clicking outside the image
-        lightbox.addEventListener('click', function(event) {
-            if (event.target === lightbox) {
-                lightbox.style.display = 'none';
-            }
-        });
-
-        // Initialize pagination when page loads
-        document.addEventListener('DOMContentLoaded', initPagination);
-    </script>
+    // Close interactions
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+      // Click outside the image closes
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+  </script>
 </body>
 </html>
