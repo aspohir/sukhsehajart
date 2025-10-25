@@ -782,9 +782,91 @@
         // Initialize pagination when page loads
         document.addEventListener('DOMContentLoaded', initPagination);
     </script>
+         <!-- Firebase SDK Script -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+    getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion 
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // 🔹 Replace with your Firebase config
+ // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBZtMA5O0TCfnNlsOxSg-dRC7g6P5cJM9w",
+  authDomain: "sukhsehajart.firebaseapp.com",
+  databaseURL: "https://sukhsehajart-default-rtdb.firebaseio.com",
+  projectId: "sukhsehajart",
+  storageBucket: "sukhsehajart.firebasestorage.app",
+  messagingSenderId: "535132640787",
+  appId: "1:535132640787:web:50b73b167203b15a6c11e6"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ❤️ Like Function
+  async function likeArt(id) {
+    const ref = doc(db, "artworks", id);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) await setDoc(ref, { likes: 1, comments: [] });
+    else await updateDoc(ref, { likes: (snap.data().likes || 0) + 1 });
+    showLikes(id);
+  }
+
+  // 💬 Comment Function
+  async function addComment(id) {
+    const text = document.getElementById(`comment-${id}`).value.trim();
+    if (!text) return;
+    const ref = doc(db, "artworks", id);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) await setDoc(ref, { likes: 0, comments: [text] });
+    else await updateDoc(ref, { comments: arrayUnion(text) });
+    document.getElementById(`comment-${id}`).value = "";
+    showComments(id);
+  }
+
+  // 🧾 Display Functions
+  async function showLikes(id) {
+    const ref = doc(db, "artworks", id);
+    const snap = await getDoc(ref);
+    document.getElementById(`likes-${id}`).innerText = snap.exists() ? snap.data().likes || 0 : 0;
+  }
+
+  async function showComments(id) {
+    const ref = doc(db, "artworks", id);
+    const snap = await getDoc(ref);
+    const list = document.getElementById(`comments-${id}`);
+    list.innerHTML = "";
+    if (snap.exists()) {
+      (snap.data().comments || []).forEach(c => {
+        const p = document.createElement("p");
+        p.textContent = "💬 " + c;
+        list.appendChild(p);
+      });
+    }
+  }
+
+  // 🚀 Auto-load all sketches
+  window.onload = () => {
+    ["sketch1", "sketch2", "sketch3"].forEach(id => {
+      showLikes(id);
+      showComments(id);
+    });
+  };
+</script>
+
 </body>
 
 </html>
+
 
 
 
