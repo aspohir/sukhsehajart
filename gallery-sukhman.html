@@ -1,78 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Firebase App + Firestore SDKs -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { 
-    getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion 
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  // 🔹 Replace this with your actual Firebase config
-  const firebaseConfig = {
-    apiKey: "YOUR-KEY",
-    authDomain: "YOUR-APP.firebaseapp.com",
-    projectId: "YOUR-APP",
-    storageBucket: "YOUR-APP.appspot.com",
-    messagingSenderId: "ID",
-    appId: "APP-ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // 🔹 Like Function
-  async function likeArt(artId) {
-    const ref = doc(db, "artworks", artId);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) await setDoc(ref, { likes: 1, comments: [] });
-    else await updateDoc(ref, { likes: (snap.data().likes || 0) + 1 });
-    showLikes(artId);
-  }
-
-  // 🔹 Comment Function
-  async function addComment(artId) {
-    const text = document.getElementById(`comment-${artId}`).value.trim();
-    if (!text) return;
-    const ref = doc(db, "artworks", artId);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) await setDoc(ref, { likes: 0, comments: [text] });
-    else await updateDoc(ref, { comments: arrayUnion(text) });
-    document.getElementById(`comment-${artId}`).value = "";
-    showComments(artId);
-  }
-
-  // 🔹 Display Functions
-  async function showLikes(artId) {
-    const ref = doc(db, "artworks", artId);
-    const snap = await getDoc(ref);
-    document.getElementById(`likes-${artId}`).innerText = snap.exists() ? snap.data().likes || 0 : 0;
-  }
-
-  async function showComments(artId) {
-    const ref = doc(db, "artworks", artId);
-    const snap = await getDoc(ref);
-    const div = document.getElementById(`comments-${artId}`);
-    div.innerHTML = "";
-    if (snap.exists()) {
-      (snap.data().comments || []).forEach(c => {
-        const p = document.createElement("p");
-        p.textContent = "💬 " + c;
-        div.appendChild(p);
-      });
-    }
-  }
-
-  // 🔹 Load All on Page Load
-  window.onload = () => {
-    ["art1", "art2", "art3"].forEach(id => {
-      showLikes(id);
-      showComments(id);
-    });
-  };
-</script>
-
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sukhman's Art Gallery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -603,34 +532,15 @@
 
      <!--  <div class="gallery-grid" id="galleryGrid">-->
             <!-- Sketch 1 -->
-
-<div class="sketch-card">
-  <img src="images/Sukhman-sketches/sketch1.webp" alt="Art 1" width="300">
-     <div class="sketch-info">
-                    <h3>Lost in thoughts</h3>
-                    <p>A pencil sketch of an anime boy in side profile.</p>
-                    <div class="sketch-date">Created: June 15, 2025</div>
-                </div>
-  <div>❤️ Likes: <span id="likes-art1">0</span></div>
-  <button onclick="likeArt('art1')">Like</button>
-  
-  <div>
-    <input id="comment-art1" placeholder="Add a comment...">
-    <button onclick="addComment('art1')">Post</button>
-  </div>
-  
-  <div id="comments-art1"></div>
-</div>
-
         
-          <!--   <div class="sketch-card"> 
+            <div class="sketch-card"> 
                 <img src="images/Sukhman-sketches/sketch1.webp" alt="Sketch 1" class="sketch-image">
                 <div class="sketch-info">
                     <h3>Lost in thoughts</h3>
                     <p>A pencil sketch of an anime boy in side profile.</p>
                     <div class="sketch-date">Created: June 15, 2025</div>
                 </div>
-            </div> -->
+            </div> 
  
             <!-- Sketch 2 -->
             <div class="sketch-card">
@@ -851,6 +761,7 @@
 </body>
 
 </html>
+
 
 
 
